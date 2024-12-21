@@ -39,7 +39,9 @@ export default defineComponent({
     const { path } = toRefs(props);
 
     function goAblum(item) {
-      proxy.$store.commit("setSongDetails", item);
+      proxy.$store.commit("setSongDetails", item)
+      console.log(item)
+      console.log( `/${path.value}/${item.id}`)
       routerManager(path.value, { path: `/${path.value}/${item.id}` });
     }
 

@@ -9,7 +9,7 @@
       <div class="info-box">
         <!--歌曲图片-->
       <div @click="goPlayerPage">
-         <el-image class="song-bar-img" fit="contain"/>
+         <el-image class="song-bar-img" fit="contain" :src="attachImageUrl(songPic)"/>
       </div>
         <!--播放开始结束时间-->
         <div v-if="songId">
@@ -82,11 +82,14 @@ export default defineComponent({
     const {routerManager, playMusic, checkStatus, downloadMusic} = mixin();
 
     const isCollection = ref(false); // 是否收藏
-
     const userIdVO = computed(() => store.getters.userId);
     const songIdVO = computed(() => store.getters.songId);
     const token = computed(() => store.getters.token);
-
+    const changeTime = computed(() => store.getters.changeTime); // 指定播放时刻
+    watch(changeTime, (value) => {
+      // console.log("PlayBar-watchChangetime" + value + "秒")
+    }
+    );
     watch(songIdVO, () => {
       initCollection();
     });
@@ -190,7 +193,9 @@ export default defineComponent({
       this.endTime = formatSeconds(this.duration);
       // 移动进度条
       this.nowTime = (this.curTime / this.duration) * 100;
+      // console.log("PlayBar-watchCurtime:" + "curtime:" + this.curTime + " nowtime:" + this.nowTime+"%") 
     },
+    
     // 自动播放下一首
     autoNext() {
       this.next();
@@ -206,6 +211,7 @@ export default defineComponent({
     },
     changeTime() {
       this.$store.commit("setChangeTime", this.duration * (this.nowTime * 0.01));
+      // console.log("PlayBar-@change:changeTime:" + this.duration * (this.nowTime * 0.01)+"秒")
     },
     changePlayState() {
       this.playStateIndex = this.playStateIndex >= this.playStateList.length - 1 ? 0 : ++this.playStateIndex;

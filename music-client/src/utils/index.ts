@@ -40,15 +40,30 @@ export function parseLyric(text) {
 
   lines[lines.length - 1].length === 0 && lines.pop();
   for (const item of lines) {
-    const time = item.match(pattern); // 存前面的时间段
+    const time = item.match(pattern);  // 存前面的时间段
+    if (!time) {
+        // console.error("No time stamps found in the line: ", item);
+        continue; // 如果没有匹配到时间，跳过当前循环
+    }
     const value = item.replace(pattern, ""); // 存歌词
     for (const item1 of time) {
-      const t = item1.slice(1, -1).split(":");
-      if (value !== "") {
-        result.push([parseInt(t[0], 10) * 60 + parseFloat(t[1]), value]);
-      }
+        const t = item1.slice(1, -1).split(":");
+        if (value !== "") {
+            result.push([parseInt(t[0], 10) * 60 + parseFloat(t[1]), value]);
+        }
     }
-  }
+}
+
+  // for (const item of lines) {
+  //   const time = item.match(pattern); // 存前面的时间段
+  //   const value = item.replace(pattern, ""); // 存歌词
+  //   for (const item1 of time) {
+  //     const t = item1.slice(1, -1).split(":");
+  //     if (value !== "") {
+  //       result.push([parseInt(t[0], 10) * 60 + parseFloat(t[1]), value]);
+  //     }
+  //   }
+  // }
   result.sort((a, b) => a[0] - b[0]);
   return result;
 }

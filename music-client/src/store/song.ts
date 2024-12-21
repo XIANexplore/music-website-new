@@ -1,3 +1,4 @@
+import { getBaseURL } from "@/api/request";
 import { Icon } from "@/enums";
 
 export default {
@@ -106,6 +107,7 @@ export default {
       commit("setSingerName", singerName);
       commit("setLyric", lyric);
       commit("setCurrentPlayList", currentSongList);
+      console.log("playmusic" + "        id:" + id + "   url:" + url)
     },
   },
 };

@@ -1,5 +1,5 @@
 <template>
-  <audio :src="attachImageUrl(songUrl)" controls="controls" :ref="player" preload="true" @canplay="canplay" @timeupdate="timeupdate" @ended="ended">
+  <audio :src="attachImageUrl(songUrl)" controls="true" :ref="player" preload="true" @canplay="canplay" @timeupdate="timeupdate" @ended="ended">
     <!--（1）属性：controls，preload（2）事件：canplay，timeupdate，ended（3）方法：play()，pause() -->
     <!--controls：向用户显示音频控件（播放/暂停/进度条/音量）-->
     <!--preload：属性规定是否在页面加载后载入音频-->
@@ -31,7 +31,11 @@ export default defineComponent({
     // 监听播放还是暂停
     watch(isPlay, () => togglePlay());
     // 跳到指定时刻播放
-    watch(changeTime, () => (divRef.value.currentTime = changeTime.value));
+    watch(changeTime, () => {
+      divRef.value.currentTime = changeTime.value
+      // console.log("audio-watchChangetime:（将更新currentime）" + divRef.value.currentTime)
+      }
+    );
     watch(volume, (value) => (divRef.value.volume = value));
 
     // 开始 / 暂停
@@ -40,6 +44,7 @@ export default defineComponent({
     }
     // 获取歌曲链接后准备播放
     function canplay() {
+      console.log("canplay~~~~~~")
       //  记录音乐时长
       proxy.$store.commit("setDuration", divRef.value.duration);
       //  开始播放
@@ -49,6 +54,8 @@ export default defineComponent({
     // 音乐播放时记录音乐的播放位置
     function timeupdate() {
       proxy.$store.commit("setCurTime", divRef.value.currentTime);
+      // console.log("audio-curtime" + divRef.value.currentTime)
+      
     }
     // 音乐播放结束时触发
     function ended() {
@@ -71,6 +78,6 @@ export default defineComponent({
 
 <style scoped>
 audio {
-  display: none;
+  /* display: none; */
 }
 </style>

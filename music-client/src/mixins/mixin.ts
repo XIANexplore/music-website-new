@@ -77,7 +77,9 @@ export default function () {
       console.error("下载链接为空！");
       return;
     }
+    console.log("songurl: " + songUrl)
     const fileName = getFileName(songUrl);
+    console.log("filename: " + fileName)
     const downUrl="/download/"+fileName
    // const result = (await HttpManager.downloadMusic(downUrl)) as ResponseBody;
    // console.log(result.data);

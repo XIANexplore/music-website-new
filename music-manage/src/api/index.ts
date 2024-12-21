@@ -2,7 +2,11 @@ import {deletes, get, getBaseURL, post} from './request'
 
 const HttpManager = {
     // 获取图片信息
-    attachImageUrl: (url) => `${getBaseURL()}/${url}`,
+    attachImageUrl: (url) => {
+        const last_url = `${getBaseURL()}/${url}`
+        console.log(last_url)
+        return last_url
+    },
     // =======================> 管理员 API 完成
     // 是否登录成功
     getLoginStatus: ({username, password}) => post(`admin/login/status`, {username, password}),
@@ -73,7 +77,8 @@ const HttpManager = {
     updateSongLrc: (id) => `${getBaseURL()}/song/lrc/update?id=${id}`,
     // 删除歌曲
     deleteSong: (id) => deletes(`song/delete?id=${id}`),
-
+    //添加歌曲
+    setSong: (formDate) => post('song/add', formDate),
     // =======================> 歌单 API 完成
     // 添加歌单t
     setSongList: ({title, introduction, style}) => post(`songList/add`, {title, introduction, style}),

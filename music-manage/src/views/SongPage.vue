@@ -193,6 +193,7 @@ export default defineComponent({
       currentPage.value = 1;
     }
     function setSongUrl(row) {
+      console.log("setSongUrl")
       proxy.$store.commit("setUrl", row.url);
       toggle.value = row.name;
       if (isPlay.value) {
@@ -276,37 +277,51 @@ export default defineComponent({
       lyric: "",
     });
 
-    function addSong() {
+    async function addSong() {
       const addSongForm = new FormData(document.getElementById("add-song") as HTMLFormElement);
       addSongForm.append("singerId", singerId.value);
       addSongForm.set("name", singerName.value + "-" + addSongForm.get("name"));
       if (!addSongForm.get("lyric")) addSongForm.set("lyric", "[00:00:00]暂无歌词");
+      if(addSongForm.get("lrcfile")) addSongForm.set("lrcfile",addSongForm.get("lrcfile"))
+      if(addSongForm.get("file")) addSongForm.set("file",addSongForm.get("file"))
 
-      const req = new XMLHttpRequest();
-      req.onreadystatechange = () => {
-        if (req.readyState === 4 && req.status === 200) {
-          let res = JSON.parse(req.response);
-          (proxy as any).$message({
-            message: res.message,
-            type: res.type,
-          });
-          if (res.success) {
-            getData();
-            registerForm.name = "";
-            registerForm.singerName = "";
-            registerForm.introduction = "";
-            registerForm.lyric = "";
-           
-          }
-        }
-      };
-      console.log(registerForm.name)
-      console.log(registerForm.singerName)
-      console.log(registerForm.introduction)
-      console.log(registerForm.lyric)
-      req.open("post", HttpManager.attachImageUrl(`/song/add`), false);
-      req.send(addSongForm);
+      const result = (await HttpManager.setSong(addSongForm)) as ResponseBody;
+      (proxy as any).$message({
+        message: result.message,
+        type: result.type,
+      });
+      if (result.success) {
+        getData();
+        registerForm.name = ""
+        registerForm.singerName = ""
+        registerForm.introduction = ""
+        registerForm.lyric = ""
+      }
       centerDialogVisible.value = false;
+      // req.onreadystatechange = () => {
+      //   if (req.readyState === 4 && req.status === 200) {
+      //     let res = JSON.parse(req.response);
+      //     (proxy as any).$message({
+      //       message: res.message,
+      //       type: res.type,
+      //     });
+      //     if (res.success) {
+      //       getData();
+      //       registerForm.name = "";
+      //       registerForm.singerName = "";
+      //       registerForm.introduction = "";
+      //       registerForm.lyric = "";
+           
+      //     }
+      //   }
+      // };
+      // console.log(registerForm.name)
+      // console.log(registerForm.singerName)
+      // console.log(registerForm.introduction)
+      // console.log(registerForm.lyric)
+      // req.open("post", HttpManager.attachImageUrl(`/song/add`), false);
+      // req.send(addSongForm);
+      // centerDialogVisible.value = false;
     }
 
     /**

@@ -2,7 +2,8 @@ import { getBaseURL, get, post, deletes } from "./request";
 
 const HttpManager = {
   // 获取图片信息
-  attachImageUrl: (url) => url ? `${getBaseURL()}/${url}` : "https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png",
+  attachImageUrl: (url) => url ? `${getBaseURL()}/${url}` : "https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png"
+  ,
   // =======================> 用户 API 完成
   // 登录
   signIn: ({username,password}) => post(`user/login/status`, {username,password}),
@@ -16,7 +17,10 @@ const HttpManager = {
   // 返回指定ID的用户
   getUserOfId: (id) => get(`user/detail?id=${id}`),
   // 更新用户头像
-  uploadUrl: (userId) => `${getBaseURL()}/user/avatar/update?id=${userId}`,
+  uploadUrl: (userId) => {
+    const last_url = `${getBaseURL()}/user/avatar/update?id=${userId}`
+    return last_url
+  },
 
   // =======================> 歌单 API 完成
   // 获取全部歌单

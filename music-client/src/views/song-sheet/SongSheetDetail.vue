@@ -39,6 +39,7 @@ export default defineComponent({
     SongList,
     Comment,
   },
+  
   setup() {
     const { proxy } = getCurrentInstance();
     const store = useStore();
@@ -72,9 +73,10 @@ export default defineComponent({
       nowRank.value = result.data / 2;
     }
     async function getUserRank(userId, songListId) {
+      // if(userId == null) userId = -1
       const result = (await HttpManager.getUserRank(userId, songListId)) as ResponseBody;
       nowScore.value = result.data / 2;
-      disabledRank.value = true;
+      disabledRank.value = false;
       assistText.value = "已评价";
     }
     // 提交评分
@@ -102,10 +104,13 @@ export default defineComponent({
       }
     }
 
-    getUserRank(nowUserId.value, nowSongListId.value);
+    // getUserRank(nowUserId.value, nowSongListId.value);
+    //当游客登录时，nowUserId为null，但是必须传入long类型，因s此做强制类型转换
+    getUserRank(Number(nowUserId.value), nowSongListId.value);
+
     getRank(nowSongListId.value); // 获取评分
     getSongId(nowSongListId.value); // 获取歌单里面的歌曲ID
-
+    
     return {
       songDetails,
       rank: nowRank,
